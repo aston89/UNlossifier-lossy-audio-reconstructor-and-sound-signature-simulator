@@ -459,6 +459,7 @@ pip install -r requirements.txt
 ### FFmpeg
 Ensure ffmpeg is installed and accessible:
 ffmpeg -version
+(on windows install ffmpeg and ensure it's present on "path" enviroment variables)
 
 ---
 
