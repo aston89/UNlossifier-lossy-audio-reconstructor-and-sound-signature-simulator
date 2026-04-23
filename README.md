@@ -1,5 +1,5 @@
 # UNlossifier
-**AI lossy reconstructor and simulator powered by U-Net**
+**AI lossy reconstructor and sound signature simulator powered by U-Net**
 
 ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?logo=pytorch&logoColor=white)
 ![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
