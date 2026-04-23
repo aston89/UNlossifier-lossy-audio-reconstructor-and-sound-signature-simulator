@@ -1,5 +1,5 @@
 # UNlossifier
-**AI lossy reconstructor and sound signature simulator powered by U-Net**
+**UNlossifier is an AI powered U-Net based audio system for lossy restoration and learned sound-domain transformation.**
 
 ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?logo=pytorch&logoColor=white)
 ![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
@@ -53,6 +53,21 @@ The project is designed to be:
 UNlossifier approaches lossy audio restoration as a **reverse codec problem**: given a degraded signal, the model learns to reconstruct a plausible high-quality version by inverting compression artifacts.
 
 The pipeline combines **time-domain learning** with **spectral supervision** while explicitly modeling stereo information through Mid/Side decomposition.
+
+### Operating Modes
+UNlossifier operates in two complementary regimes:
+
+1. Restoration Mode
+Recovers degraded audio from lossy compression (MP3, AAC, Opus, etc.), removing artifacts and reconstructing missing spectral content.
+
+2. Signature Mode (Experimental)
+Learns audio domain transformations such as:
+- vinyl / tape coloration
+- codec-style degradation
+- analog console emulation
+- lo-fi / vintage textures
+
+Both modes share the same architecture and differ only in training data structure.
 
 ### Processing Flow
 
