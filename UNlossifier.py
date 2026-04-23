@@ -375,7 +375,7 @@ def train(args):
         ckpt = f"model_{args.codec}_{args.bitrate}_{sr}_epoch{epoch:03d}.safetensors"
         sf_torch.save_model(model, os.path.join(CHECKPOINT_DIR, ckpt))
 
-        print(f"Epoch {epoch} | loss {loss.item():.4f}")
+        print(f"""Epoch {epoch} l_lr: {l_lr.item():.6f} l_ms: {l_ms.item():.6f} l_spec: {l_spec.item():.6f} l_energy_lr: {l_energy_lr.item():.6f} l_energy_ms: {l_energy_ms.item():.6f} ms_consistency: {ms_consistency.item():.6f} ms_to_lr: {ms_to_lr.item():.6f} TOTAL: {loss.item():.6f}""")
 
 # =========================================================
 # INFERENCE
