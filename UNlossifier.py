@@ -179,7 +179,9 @@ def multi_stft_loss(pred, target):
     fft_sizes = [128, 1024, 2048]
     total_loss = 0.0
 
-    # LR DOMAIN (space)
+    # =========================
+    # LR DOMAIN (primary signal)
+    # =========================
     for n_fft in fft_sizes:
 
         hop = n_fft // 4
@@ -207,36 +209,8 @@ def multi_stft_loss(pred, target):
 
         total_loss += loss_lr / 2
 
-    # MS DOMAIN (content)
-    for n_fft in fft_sizes:
-
-        hop = n_fft // 4
-        window = torch.hann_window(n_fft, device=pred.device)
-
-        px_M = pred[:, 2, :]
-        px_S = pred[:, 3, :]
-        tx_M = target[:, 2, :]
-        tx_S = target[:, 3, :]
-
-        loss_ms = 0.0
-
-        for px, tx in [(px_M, tx_M), (px_S, tx_S)]:
-
-            p = torch.stft(px, n_fft, hop, window=window, return_complex=True)
-            t = torch.stft(tx, n_fft, hop, window=window, return_complex=True)
-
-            mag_p = torch.abs(p)
-            mag_t = torch.abs(t)
-
-            loss_ms += (
-                F.l1_loss(mag_p, mag_t) +
-                0.5 * F.l1_loss(torch.log(mag_p + 1e-7), torch.log(mag_t + 1e-7))
-            )
-
-        total_loss += loss_ms / 2
-
     # =========================
-    # STEREO COHERENCE
+    # STEREO COHERENCE (geometry constraint)
     # =========================
     stereo_loss = F.l1_loss(
         pred[:, 0, :] - pred[:, 1, :],
@@ -342,7 +316,7 @@ def train(args):
                 l_lr +
                 l_ms +
                 l_stft +
-                ms_consistency
+                0.10 * ms_consistency
             )
 
             opt.zero_grad()
