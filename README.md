@@ -360,12 +360,12 @@ To train a model, provide a folder containing clean `.wav` files:
 > python main.py --input ./data --sr 44100 --epochs 10 --batch 2 --codec mp3 --bitrate 96k
 
 #### Arguments
---input      Path to folder containing clean WAV files ("./folder")
---sr         Sample rate (e.g. 44100) (also, pairs in ram will have this sample rate)
---epochs     Number of training epochs 
---batch      Batch size (affects ram/vram) 
---codec      Compression codec (mp3, aac, opus, vorbis) - (use "wav" for creative signature style model training)
---bitrate    Target bitrate (e.g. 64k, 96k, 128k) - (skip this for creative signature style model training)
+> --input      Path to folder containing clean WAV files ("./folder")
+> --sr         Sample rate (e.g. 44100) (also, pairs in ram will have this sample rate)
+> --epochs     Number of training epochs 
+> --batch      Batch size (affects ram/vram) 
+> --codec      Compression codec (mp3, aac, opus, vorbis) - (use "wav" for creative signature style model training)
+> --bitrate    Target bitrate (e.g. 64k, 96k, 128k) - (skip this for creative signature style model training)
 
 During training:
 - Clean audio is automatically compressed using ffmpeg
