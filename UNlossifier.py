@@ -63,10 +63,12 @@ def to_ms(x):
 
 
 def from_ms(x):
-    # x: numpy [4, T]
+    if isinstance(x, torch.Tensor):
+        x = x.detach().cpu().numpy()
+
     L = x[2] + x[3]
     R = x[2] - x[3]
-    return np.stack([L, R], axis=0)
+    return np.stack([L, R], axis=0).astype(np.float32)
 
 
 def to_torch(x, device):
@@ -325,38 +327,32 @@ def train(args):
             clean = clean[..., :min_len]
 
             L_p, R_p = pred[:, 0], pred[:, 1]
-            L_t, R_t = clean[:, 0], clean[:, 1]
+            M_p, S_p = pred[:, 2], pred[:, 3]
 
-            # LR 
             l_lr = F.l1_loss(
                 torch.stack([L_p, R_p], dim=1),
                 torch.stack([L_t, R_t], dim=1)
             )
-
-            # MS
-            M_p = 0.5 * (L_p + R_p)
-            S_p = 0.5 * (L_p - R_p)
-
-            # MS target
-            M_t = 0.5 * (L_t + R_t)
-            S_t = 0.5 * (L_t - R_t)
 
             l_ms = F.l1_loss(
                 torch.stack([M_p, S_p], dim=1),
                 torch.stack([M_t, S_t], dim=1)
             )
 
-            # loss main 
-            l_lmrs = 0.5 * l_lr + 0.5 * l_ms
+            L_rec = M_p + S_p
+            R_rec = M_p - S_p
 
-            # STFT (nuance)
+            l_consistency = F.l1_loss(
+                torch.stack([L_rec, R_rec], dim=1),
+                torch.stack([L_p, R_p], dim=1)
+            )
+
             l_stft = stft_lr_loss(
                 torch.stack([L_p, R_p], dim=1),
                 torch.stack([L_t, R_t], dim=1)
             )
 
-            # LOSS FINAL
-            loss = l_lmrs + 0.20 * l_stft
+            loss = l_lmrs + 0.20 * l_stft + 0.50 * l_consistency
 
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -396,22 +392,28 @@ def inference(args):
 
             if x.shape[1] < chunk:
                 pad = chunk - x.shape[1]
-                x = np.pad(x, ((0,0),(0,pad)))
+                x = np.pad(x, ((0, 0), (0, pad)))
 
             x = to_torch(to_ms(x), DEVICE).unsqueeze(0)
 
-            y = model(x).squeeze(0).cpu().numpy()
-            y = y[:, :min(chunk, total - i)]
+            y = model(x).squeeze(0).cpu().numpy().astype(np.float32)
+            y = np.clip(y, -3.0, 3.0)
 
-            win = window[:y.shape[1]]
+            valid = min(chunk, total - i)
+            y = y[:, :valid]
+            win = window[:valid]
 
-            out[:, i:i+y.shape[1]] += y * win
-            w[:, i:i+y.shape[1]] += win
+            out[:, i:i+valid] += y * win
+            w[:, i:i+valid] += win
 
-    out /= np.clip(w, 1e-8, None)
+    out = out / np.clip(w, 1e-8, None)
+    out = np.nan_to_num(out)
+    out = np.clip(out, -3.0, 3.0)
 
     stereo = from_ms(out)
-    save_audio(args.output, stereo, sr)
+    stereo = np.clip(stereo, -1.0, 1.0)
+
+    save_audio(args.output, stereo.astype(np.float32), sr)
 
     print("Saved:", args.output)
 
