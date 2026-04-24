@@ -496,5 +496,5 @@ ffmpeg -version
 - GPU is strongly recommended for training
 - CPU inference is possible but slower
 - Disk space is required for temporary compressed files
-- model_mp3_96k_32000_epoch399.safetensors (Epoch 399 l_lr: 0.008655 l_ms: 0.005860 l_stft: 0.663392 ms_consistency: 0.011658 TOTAL: 0.679073)
+- model_mp3_96k_32000_epoch397.safetensors (Epoch 397 l_lr: 0.009776 l_ms: 0.007643 l_stft: 0.624847)
   its an example of model trained on only 6 pairs of different music style and genre, it's specifically usefull to restore mp3 compressed at 96kbps 32khz.
