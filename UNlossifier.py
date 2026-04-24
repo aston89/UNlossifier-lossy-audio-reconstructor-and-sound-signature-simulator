@@ -177,22 +177,19 @@ def match_size(x, ref):
 def multi_stft_loss(pred, target):
 
     fft_sizes = [128, 1024, 2048]
-    total_loss = 0.0
+    losses = []
 
-    # =========================
-    # LR DOMAIN (primary signal)
-    # =========================
+    px_L = pred[:, 0, :]
+    px_R = pred[:, 1, :]
+    tx_L = target[:, 0, :]
+    tx_R = target[:, 1, :]
+
     for n_fft in fft_sizes:
 
         hop = n_fft // 4
         window = torch.hann_window(n_fft, device=pred.device)
 
-        px_L = pred[:, 0, :]
-        px_R = pred[:, 1, :]
-        tx_L = target[:, 0, :]
-        tx_R = target[:, 1, :]
-
-        loss_lr = 0.0
+        loss_scale = 0.0
 
         for px, tx in [(px_L, tx_L), (px_R, tx_R)]:
 
@@ -202,22 +199,14 @@ def multi_stft_loss(pred, target):
             mag_p = torch.abs(p)
             mag_t = torch.abs(t)
 
-            loss_lr += (
+            loss_scale += (
                 F.l1_loss(mag_p, mag_t) +
                 F.l1_loss(torch.log(mag_p + 1e-7), torch.log(mag_t + 1e-7))
             )
 
-        total_loss += loss_lr / 2
+        losses.append(loss_scale / 2)
 
-    # =========================
-    # STEREO COHERENCE (geometry constraint)
-    # =========================
-    stereo_loss = F.l1_loss(
-        pred[:, 0, :] - pred[:, 1, :],
-        target[:, 0, :] - target[:, 1, :]
-    )
-
-    return (total_loss / len(fft_sizes)) + 0.2 * stereo_loss
+    return losses  # [stft_128, stft_1024, stft_2048]
 
 # =========================================================
 # DATASET
@@ -309,7 +298,13 @@ def train(args):
             )
 
             # spectral coherency (all channels)
-            l_stft = multi_stft_loss(pred, clean)
+            stft_128, stft_1024, stft_2048 = multi_stft_loss(pred, clean)
+
+            l_stft = (
+                0.3 * stft_128 +
+                0.5 * stft_1024 +
+                0.2 * stft_2048
+            )
 
             # FINAL LOSS
             loss = (
@@ -326,7 +321,7 @@ def train(args):
         ckpt = f"model_{args.codec}_{args.bitrate}_{sr}_epoch{epoch:03d}.safetensors"
         sf_torch.save_model(model, os.path.join(CHECKPOINT_DIR, ckpt))
 
-        print(f"""Epoch {epoch} l_lr: {l_lr.item():.6f} l_ms: {l_ms.item():.6f} l_stft: {l_stft.item():.6f} ms_consistency: {ms_consistency.item():.6f} TOTAL: {loss.item():.6f}""")
+        print(f"""Epoch {epoch} l_lr: {l_lr.item():.6f} l_ms: {l_ms.item():.6f} stft_128: {stft_128.item():.6f} stft_1024: {stft_1024.item():.6f} stft_2048: {stft_2048.item():.6f} ms_consistency: {ms_consistency.item():.6f} TOTAL: {loss.item():.6f}""")
 
 # =========================================================
 # INFERENCE
