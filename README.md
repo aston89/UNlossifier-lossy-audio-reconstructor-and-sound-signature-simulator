@@ -218,22 +218,13 @@ Training is guided by a composite loss that balances multiple aspects of audio q
 - **Waveform Loss (L1)**  
   Ensures time-domain alignment.
 
+- **L/S to Mid/Side Consistency**  
+  Ensures LR and MS representations agree.
+
 - **Multi-Scale STFT Loss**  
   Operates at multiple FFT sizes to capture:
   - transient detail (small FFT)
   - harmonic structure (large FFT)
-
-- **Log-Magnitude Loss**  
-  Improves perceptual consistency.
-
-- **Stereo Coherence Loss**  
-  Enforces consistency between L/R differences.
-
-- **Mid/Side Consistency**  
-  Ensures LR and MS representations agree.
-
-- **Energy Matching**  
-  Stabilizes amplitude and dynamics.
 
 This combination allows the model to balance **mathematical accuracy** and **perceptual quality**.
 
