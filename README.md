@@ -196,8 +196,8 @@ The model follows a standard encoder–decoder U-Net structure:
 
 - **Output Layer**
   - Produces 4 channels (L, R, M, S)
-  - Final stereo is reconstructed from Mid/Side
-
+  - Final stereo is a continuously graduated ensembled transformation from LS and MS contemporaneously, minimizing further the loss error
+  
 ### Design Choices
 
 - **1D Convolutions**  
