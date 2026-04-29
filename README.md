@@ -349,7 +349,7 @@ UNlossifier provides a simple CLI interface for both training and inference.
 
 ### Training
 To train a model, provide a folder containing clean `.wav` files:
-> python main.py --input ./yourfolder --sr 44100 --epochs 10 --batch 2 --codec mp3 --bitrate 96k
+> UNlossifier.py --input ./yourfolder --sr 44100 --epochs 10 --batch 2 --codec mp3 --bitrate 96k
 
 #### Arguments
 - --input      Path to folder containing clean WAV files ("./folder")
@@ -366,7 +366,7 @@ During training:
 
 ### Inference
 To restore an audio file using a trained model:
-> python main.py --input input.wav --output restored.wav --model model.safetensors --sr 44100
+> UNlossifier.py --input input.wav --output restored.wav --model yourtrainedmodel.safetensors --sr 44100
 
 #### Arguments
 --input      Input audio file  
@@ -397,7 +397,7 @@ UNlossifier is particularly effective on heavily degraded audio where traditiona
 - **Low bitrate audio (64–96 kbps)**
   Restoration of heavily compressed music or recordings.
 - **Multiple compression passes**  
-  Recovery from files that have been re-encoded multiple times.
+  Recovery from files that have been re-encoded multiple times (in this case, put your degraded files pre-made in the temp_audio folder, compression will be skipped)
 - **Streaming / legacy audio**
   Enhancement of low-quality sources from web or archives.
 - **Lo-Fi / Vinyl / Bitcrush / Tape Saturation / analog mixer warmness**
