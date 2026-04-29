@@ -349,7 +349,7 @@ UNlossifier provides a simple CLI interface for both training and inference.
 
 ### Training
 To train a model, provide a folder containing clean `.wav` files:
-> python main.py --input ./data --sr 44100 --epochs 10 --batch 2 --codec mp3 --bitrate 96k
+> python main.py --input ./yourfolder --sr 44100 --epochs 10 --batch 2 --codec mp3 --bitrate 96k
 
 #### Arguments
 - --input      Path to folder containing clean WAV files ("./folder")
