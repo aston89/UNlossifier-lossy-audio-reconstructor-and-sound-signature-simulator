@@ -224,6 +224,7 @@ Training is guided by a composite loss that balances multiple aspects of audio q
 - **Multi-Scale STFT Loss**  
   Operates at multiple FFT sizes to capture:
   - transient detail (small FFT)
+  - texture timbre (medium FFT)
   - harmonic structure (large FFT)
 
 This combination allows the model to balance **mathematical accuracy** and **perceptual quality**.
