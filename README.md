@@ -366,7 +366,9 @@ During training:
 
 ### Inference
 To restore an audio file using a trained model:
-> UNlossifier.py --input input.wav --output restored.wav --model yourtrainedmodel.safetensors --sr 44100
+> UNlossifier.py --input input.wav --output restored.wav --model yourtrainedmodel.safetensors --sr 44100*
+
+*be sure that your file output sample rate matches the trained model sample rate.
 
 #### Arguments
 --input      Input audio file  
