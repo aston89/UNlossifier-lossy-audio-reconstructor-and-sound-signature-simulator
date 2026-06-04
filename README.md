@@ -77,8 +77,8 @@ Restored Audio (LR reconstructed from MS)
 
 ### Core Components
 
-- **L/S+Mid/Side Representation (4 channels)**  
-  The model operates on L-R + M-S simultaneously.  
+- **Hybrid Left/Right and Mid/Side Representation (4 channels)**  
+  The model operates on 2+2 channels simultaneously.  
   This allows it to preserve stereo image while restoring shared and differential content.
 
 - **U-Net Architecture (1D)**  
@@ -97,7 +97,7 @@ The result is a system that does not simply clean audio, but **learns how compre
 
 ---
 
-## 3b. Experimental Sound Signature Simulation, limits : 
+## 3b. Experimental Sound Signature Simulation: Limitations 
 Beyond restoration, UNlossifier can be repurposed as a **learned audio style transformation engine** by supplying custom source/target pairs instead of clean/compressed pairs even if [it's a bit tricky](https://github.com/aston89/UNlossifier-lossy-audio-reconstructor-and-sound-signature-simulator/issues/1).
 For example, users can intentionally provide custom source/target pairs to teach the model a desired audio transformation by placing processed audio in the source dataset and unprocessed audio in the target dataset, allowing the model to learn a custom domain transformation.
 However, this approach is considered experimental. Neural networks learn consistent relationships between inputs and targets.
