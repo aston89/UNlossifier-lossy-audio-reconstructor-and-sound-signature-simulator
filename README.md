@@ -98,7 +98,7 @@ The result is a system that does not simply clean audio, but **learns how compre
 ---
 
 ## 3b. Experimental Sound Signature Simulation, limits : 
-Beyond restoration, UNlossifier can be repurposed as a **learned audio style transformation engine** by supplying custom source/target pairs instead of clean/compressed pairs even if (it's a bit tricky)[https://github.com/aston89/UNlossifier-lossy-audio-reconstructor-and-sound-signature-simulator/issues/1].
+Beyond restoration, UNlossifier can be repurposed as a **learned audio style transformation engine** by supplying custom source/target pairs instead of clean/compressed pairs even if [it's a bit tricky](https://github.com/aston89/UNlossifier-lossy-audio-reconstructor-and-sound-signature-simulator/issues/1).
 For example, users can intentionally reverse the training setup by replacing processed audio in the source dataset and unprocessed audio in the target dataset, effectively teaching the model a custom domain transformation.
 However, **this approach is considered experimental**.
 Neural networks learn consistent relationships between inputs and targets. Transformations that follow stable patterns (EQ curves, tonal coloration, frequency response changes, console character, tape saturation, etc.) can often be learned successfully.
