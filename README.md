@@ -380,7 +380,7 @@ To restore an audio file using a trained model:
 - Audio is processed in overlapping chunks
 - Windowing is applied to avoid artifacts
 - Output is reconstructed using overlap-add (hann)
-- Stereo is restored from Mid/Side representation
+- Stereo is restored from L/S+M/S representation
 
 ### Example Workflow
 1. Collect clean audio samples  
