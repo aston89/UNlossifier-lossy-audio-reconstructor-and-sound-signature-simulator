@@ -60,12 +60,20 @@ UNlossifier operates in two complementary regimes:
 1. Restoration Mode
 Recovers degraded audio from lossy compression (MP3, AAC, Opus, etc.), removing artifacts and reconstructing missing spectral content.
 
-2. Signature Mode (Experimental)
+2. Signature Mode (Experimental)*
 Learns audio domain transformations such as:
 - vinyl / tape coloration
 - codec-style degradation
 - analog console emulation
 - lo-fi / vintage textures
+
+*Note on Experimental Signature Mode:
+UNlossifier can be repurposed as a learned audio transformation system by supplying custom source/target pairs instead of clean/compressed pairs.
+For example, users can intentionally reverse the training setup by placing processed audio in the source dataset and unprocessed audio in the target dataset, effectively teaching the model a custom domain transformation.
+However, this approach is considered experimental.
+Neural networks learn consistent relationships between inputs and targets. Transformations that follow stable patterns (EQ curves, tonal coloration, frequency response changes, console character, tape saturation, etc.) can often be learned successfully.
+Effects containing strong random or non-deterministic elements (vinyl crackle, random clicks, stochastic noise bursts, unpredictable modulation, etc.) may be harder or impossible to reproduce faithfully. In such cases the model tends to learn the average statistical behavior of the effect rather than its exact random events.
+As a result, Signature Mode should be viewed as a creative experimentation tool rather than a guaranteed audio effect cloning system.
 
 Both modes share the same architecture and differ only in training data structure.
 
