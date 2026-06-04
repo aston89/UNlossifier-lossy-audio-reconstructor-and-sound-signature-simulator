@@ -60,21 +60,9 @@ UNlossifier operates in two complementary regimes:
 1. Restoration Mode
 Recovers degraded audio from lossy compression (MP3, AAC, Opus, etc.), removing artifacts and reconstructing missing spectral content.
 
-2. Signature Mode (Experimental)*
-Learns audio domain transformations such as:
-- vinyl / tape coloration
-- codec-style degradation
-- analog console emulation
-- lo-fi / vintage textures
-
-*Note on Experimental Signature Mode:
-UNlossifier can be repurposed as a learned audio transformation system by supplying custom source/target pairs instead of clean/compressed pairs.
-For example, users can intentionally reverse the training setup by placing processed audio in the source dataset and unprocessed audio in the target dataset, effectively teaching the model a custom domain transformation.
-However, this approach is considered experimental.
-Neural networks learn consistent relationships between inputs and targets. Transformations that follow stable patterns (EQ curves, tonal coloration, frequency response changes, console character, tape saturation, etc.) can often be learned successfully.
-Effects containing strong random or non-deterministic elements (vinyl crackle, random clicks, stochastic noise bursts, unpredictable modulation, etc.) may be harder or impossible to reproduce faithfully. In such cases the model tends to learn the average statistical behavior of the effect rather than its exact random events.
-As a result, Signature Mode should be viewed as a creative experimentation tool rather than a guaranteed audio effect cloning system.
-
+2. Signature Mode (Experimental)
+Learns audio domain transformations such as vinyl or tape coloration, codec-style degradation, analog console emulation, lo-fi / vintage textures.
+  
 Both modes share the same architecture and differ only in training data structure.
 
 ### Processing Flow
@@ -89,8 +77,8 @@ Restored Audio (LR reconstructed from MS)
 
 ### Core Components
 
-- **Mid/Side Representation (4 channels)**  
-  The model operates on L, R, Mid, and Side simultaneously.  
+- **L/S+Mid/Side Representation (4 channels)**  
+  The model operates on L-R + M-S simultaneously.  
   This allows it to preserve stereo image while restoring shared and differential content.
 
 - **U-Net Architecture (1D)**  
@@ -109,9 +97,13 @@ The result is a system that does not simply clean audio, but **learns how compre
 
 ---
 
-## 3b. Extended Capability: Sound Signature Simulation
-Beyond restoration, UNlossifier can learn *audio domain transformations* when trained on structured pairs.
-When the dataset is inverted or reinterpreted (e.g. vinyl-clean vs digital-clean, analog chain emulation, codec style mapping), the model shifts from reconstruction to **audio style transfer**.
+## 3b. Experimental Sound Signature Simulation, limits : 
+Beyond restoration, UNlossifier can be repurposed as a **learned audio style transformation engine** by supplying custom source/target pairs instead of clean/compressed pairs even if (it's a bit tricky)[https://github.com/aston89/UNlossifier-lossy-audio-reconstructor-and-sound-signature-simulator/issues/1].
+For example, users can intentionally reverse the training setup by replacing processed audio in the source dataset and unprocessed audio in the target dataset, effectively teaching the model a custom domain transformation.
+However, **this approach is considered experimental**.
+Neural networks learn consistent relationships between inputs and targets. Transformations that follow stable patterns (EQ curves, tonal coloration, frequency response changes, console character, tape saturation, etc.) can often be learned successfully.
+Effects containing **strong random or non-deterministic elements (vinyl crackle, random clicks, stochastic noise bursts, unpredictable modulation, etc.) may be harder or impossible to reproduce faithfully**. In such cases the model tends to learn the average statistical behavior of the effect rather than its exact random events.
+As a result, Signature Mode should be viewed as a creative experimentation tool rather than a guaranteed audio effect cloning system.
 
 This enables:
 - Vinyl / tape coloration simulation  
@@ -119,7 +111,7 @@ This enables:
 - Lo-fi / vintage texture generation  
 - Codec-style transformation modeling  
 
-In this mode, UNlossifier behaves less like a repair tool and more like a **learned audio transformation engine**, capturing statistical characteristics of a target sound domain.
+In this mode, UNlossifier behaves like a **learned audio style transformation engine** by capturing statistical characteristics of a target sound domain.
 
 ---
 
@@ -165,7 +157,7 @@ This makes it suitable not only for general restoration, but also for:
 - specific codecs/bitrates
 - synthetic or controlled training scenarios
 
-In short, UNlossifier does not try to "fix" audio.  
+In short, UNlossifier does not try to "fix" audio.
 It tries to **coherently reimagine what was lost**.
 
 ---
@@ -229,7 +221,7 @@ Training is guided by a composite loss that balances multiple aspects of audio q
 - **L/S to Mid/Side Consistency**  
   Ensures LR and MS representations agree.
 
-- **Multi-Scale STFT Loss**  
+- **Multi-Scale STFT Loss**
   Operates at multiple FFT sizes to capture:
   - transient detail (small FFT)
   - texture timbre (medium FFT)
