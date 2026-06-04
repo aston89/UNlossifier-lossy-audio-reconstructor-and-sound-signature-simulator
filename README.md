@@ -101,8 +101,7 @@ The result is a system that does not simply clean audio, but **learns how compre
 Beyond restoration, UNlossifier can be repurposed as a **learned audio style transformation engine** by supplying custom source/target pairs instead of clean/compressed pairs even if [it's a bit tricky](https://github.com/aston89/UNlossifier-lossy-audio-reconstructor-and-sound-signature-simulator/issues/1).
 For example, users can intentionally provide custom source/target pairs to teach the model a desired audio transformation by replacing processed audio in the source dataset and unprocessed audio in the target dataset, effectively teaching the model a custom domain transformation.
 However, why **this approach is considered experimental** ? Because neural networks learn consistent relationships between inputs and targets. Transformations that follow stable patterns (EQ curves, tonal coloration, frequency response changes, console character, tape saturation, etc.) can often be learned successfully.
-Effects containing **strong random or non-deterministic elements (vinyl crackle, random clicks, stochastic noise bursts, unpredictable modulation, etc.) may be harder or impossible to reproduce faithfully**. In such cases the model tends to learn the average statistical behavior of the effect rather than its exact random events.
-As a result, Signature Mode should be viewed as a creative experimentation tool rather than a guaranteed audio effect cloning system.
+Effects containing **strong random or non-deterministic elements (vinyl crackle, random clicks, stochastic noise bursts, unpredictable modulation, etc.) may be harder or impossible to reproduce faithfully**, instead, the more deterministic and consistent the transformation is, the more reliably it can be learned, as a result, Signature Mode should be viewed as a creative experimentation tool rather than a guaranteed audio effect cloning system.
 
 This enables:
 - Vinyl / tape coloration simulation  
