@@ -493,3 +493,12 @@ ffmpeg -version
 - Disk space is required for temporary compressed files
 - model_mp3_96k_32000_epoch393.safetensors (Epoch 393 l_lr: 0.008856 l_ms: 0.005933 l_stft: 0.677289 l_consistency: 0.001343 TOTAL: 0.150919)
   its an example of model trained on only 6 pairs of different music style and genre, it's specifically usefull to restore mp3 compressed at 96kbps 32khz.
+
+---
+
+### Update 08/06/2026
+- Reworked STFT loss by removing per-sample mean normalization across spectrogram magnitudes, aligning its scale more closely with waveform-domain objectives and reducing unintended relative re-weighting of low-energy regions (0.20 loss weight was similar 0.60-0.80). 
+- Replaced standard logarithmic compression with a numerically stable log1p formulation to improve behavior in low-energy / near-zero spectral bins and avoid over-amplification of residual noise structure.
+- Reduced STFT loss contribution in the global objective (0.20 → 0.10) to prevent multi-scale spectral terms from overpowering time-domain and consistency constraints, restoring a more balanced gradient distribution across objectives.
+
+Overall, these changes shift the STFT term from a dominant, scale-sensitive constraint to a more stable perceptual regularizer focused on spectral texture rather than energy normalization artifacts.
