@@ -202,18 +202,15 @@ def stft_lr_loss(pred_lr, target_lr):
             mag_p = torch.abs(p)
             mag_t = torch.abs(t)
 
-            mag_p = mag_p / (mag_p.mean(dim=(-2, -1), keepdim=True) + 1e-6)
-            mag_t = mag_t / (mag_t.mean(dim=(-2, -1), keepdim=True) + 1e-6)
-
-            log_p = torch.log(mag_p + 1e-6)
-            log_t = torch.log(mag_t + 1e-6)
+            # no per-clip mean normalization:
+            # keeps the loss on absolute structure instead of relative scaling
 
             loss_scale += (
                 F.l1_loss(mag_p, mag_t) +
-                F.l1_loss(log_p, log_t)
+                F.l1_loss(torch.log1p(mag_p), torch.log1p(mag_t))
             )
 
-        losses.append(loss_scale / 2)
+        losses.append(loss_scale / 2.0)
 
     return 0.3 * losses[0] + 0.5 * losses[1] + 0.2 * losses[2]
 
@@ -372,7 +369,7 @@ def train(args):
                 torch.stack([L_t, R_t], dim=1)
             )
 
-            loss = l_lr + l_ms + 0.20 * l_stft + 0.50 * l_consistency
+            loss = l_lr + l_ms + 0.10 * l_stft + 0.50 * l_consistency
 
             opt.zero_grad()
             loss.backward()
@@ -387,12 +384,12 @@ def train(args):
             f"l_lr: {l_lr.item():.6f} "
             f"l_ms: {l_ms.item():.6f} "
             f"l_stft: {l_stft.item():.6f} "
+            f"l_consistency: {l_consistency.item():.6f} "
             f"TOTAL: {loss.item():.6f}"
         )
 
-
 # =========================================================
-# INFERENCE
+# INFERENCE (STABLE LR + MS FUSION = ADAPTIVE ENSEMBLE)
 # =========================================================
 def inference(args):
     model = StereoUNet().to(DEVICE)
@@ -406,13 +403,16 @@ def inference(args):
     chunk = SEG_LEN_SEC * sr
     step = chunk - int(chunk * 0.1)
 
-    out = np.zeros((4, total), dtype=np.float32)
-    w = np.zeros((4, total), dtype=np.float32)
+    out = np.zeros((2, total), dtype=np.float32)
+    w = np.zeros((2, total), dtype=np.float32)
 
     window = np.hanning(chunk).astype(np.float32)
 
+    eps = 1e-8
+
     with torch.no_grad():
         for i in range(0, total, step):
+
             x = audio[:, i:i + chunk]
 
             if x.shape[1] < chunk:
@@ -424,21 +424,53 @@ def inference(args):
             y = model(x).squeeze(0).cpu().numpy().astype(np.float32)
             y = np.clip(y, -3.0, 3.0)
 
+            # LR branch
+            L1, R1 = y[0], y[1]
+
+            # MS branch -> LR reconstruction
+            M, S = y[2], y[3]
+            L2 = M + S
+            R2 = M - S
+
+            # STABLE confidence (energy-based, not error-based)
+            conf_L1 = np.abs(L1)
+            conf_L2 = np.abs(L2)
+
+            conf_R1 = np.abs(R1)
+            conf_R2 = np.abs(R2)
+
+            # optional smoothing (VERY small, prevents HF jitter)
+            kernel = 32
+            if L1.shape[0] > kernel:
+                k = np.ones(kernel) / kernel
+                conf_L1 = np.convolve(conf_L1, k, mode="same")
+                conf_L2 = np.convolve(conf_L2, k, mode="same")
+                conf_R1 = np.convolve(conf_R1, k, mode="same")
+                conf_R2 = np.convolve(conf_R2, k, mode="same")
+
+            # normalized fusion weights
+            wL = conf_L1 / (conf_L1 + conf_L2 + eps)
+            wR = conf_R1 / (conf_R1 + conf_R2 + eps)
+
+            # fusion
+            L = wL * L1 + (1.0 - wL) * L2
+            R = wR * R1 + (1.0 - wR) * R2
+
+            stereo = np.stack([L, R], axis=0)
+
+            # overlap-add
             valid = min(chunk, total - i)
-            y = y[:, :valid]
             win = window[:valid]
 
-            out[:, i:i + valid] += y * win
+            out[:, i:i + valid] += stereo[:, :valid] * win
             w[:, i:i + valid] += win
 
-    out = out / np.clip(w, 1e-8, None)
+    # normalize
+    out = out / np.clip(w, eps, None)
     out = np.nan_to_num(out)
     out = np.clip(out, -3.0, 3.0)
 
-    stereo = from_ms(out)
-    stereo = np.clip(stereo, -1.0, 1.0)
-
-    save_audio(args.output, stereo.astype(np.float32), sr)
+    save_audio(args.output, out.astype(np.float32), sr)
     print("Saved:", args.output)
 
 
