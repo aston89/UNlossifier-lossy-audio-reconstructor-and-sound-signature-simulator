@@ -502,3 +502,18 @@ ffmpeg -version
 tip: A model trained at 32 kHz sampling rate can be used to infer audio at 44.1 kHz, but it will not be able to reconstruct or meaningfully restore content above its training bandwidth limit (≈16 kHz effective Nyquist region). Higher-frequency components will remain absent or be implicitly hallucinated rather than recovered.
 
 tip: A model trained on 64 kbps compressed audio can be applied to higher-quality sources (e.g. 320 kbps “near-lossless” MP3). In this case, the model does not simply restore missing information; it may reinterpret existing spectral content, subtly altering timbre and texture. In some cases, what is actually valid signal content may be treated as compression artifacts and reshaped accordingly.
+
+
+
+### Update 08/06/2026 — Model refinement & training/inference redesign
+* **Reworked STFT loss (major upgrade):** replaced the previous magnitude/log-loss stack with a psychoacoustic-aware formulation, adding frequency-weighted emphasis (higher sensitivity to low frequencies), spectral gradient loss, and `log1p` stabilization for improved dynamic range handling.
+* **Richer multi-resolution analysis:** expanded STFT scales and made the loss more perceptually balanced across resolutions (from ultra-low to high frequency bands).
+* **Dual-path STFT supervision:** added a second STFT loss branch computed on both LR output and MS-reconstructed LR signal, improving consistency between representations.
+* **Training objective redesign:** loss now jointly enforces LR fidelity, MS structure alignment, STFT perceptual quality, and reconstruction consistency in a more tightly coupled way.
+* **Inference blending simplified:** removed adaptive energy-based fusion; replaced with fixed LR/MS mixing (balanced ensemble approach for stability and predictability).
+* **Overlap strategy improved:** inference switched from ~10% overlap to 50% overlap, significantly reducing boundary artifacts with Hann window overlap-add.
+* **Output stability tightened:** final waveform clipping range adjusted from wider dynamic range to a stricter [-1, 1] normalization for safer audio export.
+* **Cleaner separation of concerns:** LR and MS branches are now treated more symmetrically during both training and inference, reducing representational drift.
+
+
+
