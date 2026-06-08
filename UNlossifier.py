@@ -174,12 +174,7 @@ class StereoUNet(nn.Module):
 # LOSS
 # =========================================================
 def stft_lr_loss(pred_lr, target_lr):
-    fft_sizes = [128, 256, 512, 1024, 2048]
-    
-    # weights symmetric in log-space, center-heavy
-    raw_weights = torch.tensor([0.35, 0.75, 1.00, 0.75, 0.35], device=pred_lr.device)
-    weights = raw_weights / raw_weights.sum()
-
+    fft_sizes = [128, 1024, 2048]
     losses = []
 
     for n_fft in fft_sizes:
@@ -207,17 +202,20 @@ def stft_lr_loss(pred_lr, target_lr):
             mag_p = torch.abs(p)
             mag_t = torch.abs(t)
 
-            # no per-clip mean normalization:
-            # keeps the loss on absolute structure instead of relative scaling
+            mag_p = mag_p / (mag_p.mean(dim=(-2, -1), keepdim=True) + 1e-6)
+            mag_t = mag_t / (mag_t.mean(dim=(-2, -1), keepdim=True) + 1e-6)
+
+            log_p = torch.log(mag_p + 1e-6)
+            log_t = torch.log(mag_t + 1e-6)
+
             loss_scale += (
                 F.l1_loss(mag_p, mag_t) +
-                F.l1_loss(torch.log1p(mag_p), torch.log1p(mag_t))
+                F.l1_loss(log_p, log_t)
             )
 
-        losses.append(loss_scale / 2.0)
+        losses.append(loss_scale / 2)
 
-    losses = torch.stack(losses)
-    return torch.sum(weights * losses)
+    return 0.3 * losses[0] + 0.5 * losses[1] + 0.2 * losses[2]
 
 
 # =========================================================
@@ -374,7 +372,7 @@ def train(args):
                 torch.stack([L_t, R_t], dim=1)
             )
 
-            loss = l_lr + l_ms + 0.05 * l_stft + 0.50 * l_consistency
+            loss = l_lr + l_ms + 0.20 * l_stft + 0.50 * l_consistency
 
             opt.zero_grad()
             loss.backward()
