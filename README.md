@@ -498,10 +498,12 @@ ffmpeg -version
 
 ### Safetensor weights
 
-- model_mp3_96k_32000_epoch393.safetensors (Epoch 393 l_lr: 0.008856 l_ms: 0.005933 l_stft: 0.677289 l_consistency: 0.001343 TOTAL: 0.150919).
+- **model_mp3_96k_32000_epoch393.safetensors** (Epoch 393 l_lr: 0.008856 l_ms: 0.005933 l_stft: 0.677289 l_consistency: 0.001343 TOTAL: 0.150919).
   Trained with 6 pairs of different music style and genre, it's specifically usefull to restore mp3 compressed at 96kbps 32khz.
-- model_mp3_128k_44100_epoch397.safetensors (Epoch 397 l_lr: 0.003997 l_ms: 0.002769 l_stft: 0.015105 l_consistency: 0.004153 TOTAL: 0.011863).
+- **model_mp3_128k_44100_epoch397.safetensors** (Epoch 397 l_lr: 0.003997 l_ms: 0.002769 l_stft: 0.015105 l_consistency: 0.004153 TOTAL: 0.011863).
   Trained with 6 pairs of different music style and genre using the latest version, it's specifically usefull to restore mp3 compressed at 128kbps 44.1khz.
+- **model_aac_64k_44100_epoch398.safetensors** (Epoch 398 l_lr: 0.008090 l_ms: 0.005926 l_stft: 0.030694 l_consistency: 0.000299 TOTAL: 0.020304).
+  Trained with 6 pairs of different music style and genre using the latest version, it's specifically usefull to restore aac (m4a) compressed at 64kbps 44.1khz.
 
 tip: A model trained at 32 kHz sampling rate can be used to infer audio at 44.1 kHz, but it will not be able to reconstruct or meaningfully restore content above its training bandwidth limit (≈16 kHz effective Nyquist region). Higher-frequency components will remain absent or be implicitly hallucinated rather than recovered.
 
