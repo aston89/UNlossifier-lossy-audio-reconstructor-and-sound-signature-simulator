@@ -501,6 +501,10 @@ ffmpeg -version
 - model_mp3_96k_44100_epoch295.safetensors (Epoch 295 l_lr: 0.003969 l_ms: 0.002730 l_stft: 0.019823 l_consistency: 0.000566 TOTAL: 0.008964).
   Same as above but trained using the updated version of the tool, this one is aimed at mp3 compressed at 96kbps 44.1khz. 
 
+tip: A model trained at 32 kHz sampling rate can be used to infer audio at 44.1 kHz, but it will not be able to reconstruct or meaningfully restore content above its training bandwidth limit (≈16 kHz effective Nyquist region). Higher-frequency components will remain absent or be implicitly hallucinated rather than recovered.
+
+tip: A model trained on 64 kbps compressed audio can be applied to higher-quality sources (e.g. 320 kbps “near-lossless” MP3). In this case, the model does not simply restore missing information; it may reinterpret existing spectral content, subtly altering timbre and texture. In some cases, what is actually valid signal content may be treated as compression artifacts and reshaped accordingly.
+
 ---
 
 ### Update 08/06/2026
