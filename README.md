@@ -503,7 +503,7 @@ tip: A model trained at 32 kHz sampling rate can be used to infer audio at 44.1 
 
 tip: A model trained on 64 kbps compressed audio can be applied to higher-quality sources (e.g. 320 kbps “near-lossless” MP3). In this case, the model does not simply restore missing information; it may reinterpret existing spectral content, subtly altering timbre and texture. In some cases, what is actually valid signal content may be treated as compression artifacts and reshaped accordingly.
 
-
+---
 
 ### Update 08/06/2026 — Model refinement & training/inference redesign
 * **Reworked STFT loss (major upgrade):** replaced the previous magnitude/log-loss stack with a psychoacoustic-aware formulation, adding frequency-weighted emphasis (higher sensitivity to low frequencies), spectral gradient loss, and `log1p` stabilization for improved dynamic range handling.
