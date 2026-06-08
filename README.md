@@ -507,7 +507,7 @@ tip: A model trained on 64 kbps compressed audio can be applied to higher-qualit
 
 ---
 
-### Update 08/06/2026 — Model refinement & training/inference redesign
+### Update 08/06/2026 : Model refinement & training/inference redesign
 * **Reworked STFT loss (major upgrade):** replaced the previous magnitude/log-loss stack with a psychoacoustic-aware formulation, adding frequency-weighted emphasis (higher sensitivity to low frequencies), spectral gradient loss, and `log1p` stabilization for improved dynamic range handling.
 * **Richer multi-resolution analysis:** expanded STFT scales and made the loss more perceptually balanced across resolutions (from ultra-low to high frequency bands).
 * **Dual-path STFT supervision:** added a second STFT loss branch computed on both LR output and MS-reconstructed LR signal, improving consistency between representations.
