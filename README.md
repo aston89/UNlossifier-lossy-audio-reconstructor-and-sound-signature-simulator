@@ -504,8 +504,15 @@ ffmpeg -version
 ---
 
 ### Update 08/06/2026
-- Reworked STFT loss by removing per-sample mean normalization across spectrogram magnitudes, aligning its scale more closely with waveform-domain objectives and reducing unintended relative re-weighting of low-energy regions (0.20 loss weight was similar 0.60-0.80). 
+- Reworked STFT loss by removing per-sample mean normalization across spectrogram magnitudes, aligning its scale more closely with waveform-domain objectives and reducing unintended relative re-weighting of low-energy regions (0.20 loss weight was similar 0.60-0.80).
+- Extended STFT loss to a multi-resolution spectral pyramid ([128, 256, 512, 1024, 2048]) to improve coverage of both transient-level and long-range spectral structures typical of lossy compression artifacts.
+- Introduced log-scale weighting across FFT resolutions using a symmetric log2-centered distribution, emphasizing mid-resolution bands (512–1024) while preserving stability at extreme low and high resolutions.
+- Normalized per-scale contributions to prevent bias accumulation across redundant frequency resolutions, ensuring the STFT term remains a structured regularizer rather than a dominant optimization driver.
+- Maintained dual-domain spectral objective (linear magnitude + log1p magnitude) to balance absolute reconstruction accuracy with perceptual sensitivity in low-energy regions.
 - Replaced standard logarithmic compression with a numerically stable log1p formulation to improve behavior in low-energy / near-zero spectral bins and avoid over-amplification of residual noise structure.
 - Reduced STFT loss contribution in the global objective (0.20 → 0.10) to prevent multi-scale spectral terms from overpowering time-domain and consistency constraints, restoring a more balanced gradient distribution across objectives.
+
+
+Overall, this change transforms the STFT loss from a sparse multi-scale constraint into a dense spectral pyramid, improving robustness to codec-induced artifacts while preserving controlled gradient contribution across resolutions.
 
 Overall, these changes shift the STFT term from a dominant, scale-sensitive constraint to a more stable perceptual regularizer focused on spectral texture rather than energy normalization artifacts.
