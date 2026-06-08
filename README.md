@@ -67,13 +67,15 @@ Both modes share the same architecture and differ only in training data structur
 
 ### Processing Flow
 
-Clean Audio
-Lossy Compression (mp3 / aac / opus / ...)
-Degraded Audio
-[ Mid/Side Encoding ]
-[ U-Net Reconstruction ]
-[ Multi-domain Loss Optimization ]
-Restored Audio (LR reconstructed from MS)
+| Stage | Process |
+|------|--------|
+| 1 | Clean Audio |
+| 2 | Lossy Compression (mp3 / aac / opus / ...) |
+| 3 | Degraded Audio |
+| 4 | Mid/Side Encoding |
+| 5 | U-Net Reconstruction |
+| 6 | Multi-domain Loss Optimization |
+| 7 | Restored Audio (LR reconstructed from MS) |
 
 ### Core Components
 
