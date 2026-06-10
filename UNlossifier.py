@@ -46,7 +46,7 @@ def load_audio_cached(path, target_sr):
 
 def save_audio(path, audio, sr):
     audio = audio.T if audio.shape[0] == 2 else audio
-    sf.write(path, audio, sr)
+    sf.write(path, audio, sr, subtype='FLOAT')
 
 
 # =========================================================
