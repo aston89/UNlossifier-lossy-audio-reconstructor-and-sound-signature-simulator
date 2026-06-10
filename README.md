@@ -515,7 +515,6 @@ tip: A model trained on 64 kbps compressed audio can be applied to higher-qualit
 Not all lossy codecs are equally recoverable, **older codecs such as MP3 tend to introduce relatively predictable and stationary artifacts**, making them easier for neural models to learn and compensate.
 Modern codecs such as AAC, Vorbis and especially Opus rely on increasingly sophisticated psychoacoustic models, adaptive transforms, temporal masking and dynamic bitrate allocation. Their artifacts are often highly non-stationary and context-dependent.
 As a consequence, restoration quality does not scale linearly with training time. **Even at very high epoch counts, localized artifacts (clicks, pops, transient instabilities) may remain** because the original codec decisions are not directly observable from the decoded waveform alone.
-
 In practice: MP3 (easiest) / AAC (difficult) / Vorbis (very difficult) / Opus (extremely difficult).
 
 ### Note about "codec lasagna" !
