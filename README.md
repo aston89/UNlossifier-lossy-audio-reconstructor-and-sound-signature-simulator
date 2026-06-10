@@ -502,12 +502,25 @@ ffmpeg -version
   Trained with 6 pairs of different music style and genre, it's specifically usefull to restore mp3 compressed at 96kbps 32khz.
 - **model_mp3_128k_44100_epoch397.safetensors** (Epoch 397 l_lr: 0.003997 l_ms: 0.002769 l_stft: 0.015105 l_consistency: 0.004153 TOTAL: 0.011863).
   Trained with 6 pairs of different music style and genre using the latest version, it's specifically usefull to restore mp3 compressed at 128kbps 44.1khz.
-- **model_aac_64k_44100_epoch398.safetensors** (Epoch 398 l_lr: 0.008090 l_ms: 0.005926 l_stft: 0.030694 l_consistency: 0.000299 TOTAL: 0.020304).
-  Trained with 6 pairs of different music style and genre using the latest version, it's specifically usefull to restore aac (m4a) compressed at 64kbps 44.1khz.
+
 
 tip: A model trained at 32 kHz sampling rate can be used to infer audio at 44.1 kHz, but it will not be able to reconstruct or meaningfully restore content above its training bandwidth limit (≈16 kHz effective Nyquist region). Higher-frequency components will remain absent or be implicitly hallucinated rather than recovered.
 
 tip: A model trained on 64 kbps compressed audio can be applied to higher-quality sources (e.g. 320 kbps “near-lossless” MP3). In this case, the model does not simply restore missing information; it may reinterpret existing spectral content, subtly altering timbre and texture. In some cases, what is actually valid signal content may be treated as compression artifacts and reshaped accordingly.
+
+---
+
+### Note about codec restoration difficulty !
+
+Not all lossy codecs are equally recoverable, **older codecs such as MP3 tend to introduce relatively predictable and stationary artifacts**, making them easier for neural models to learn and compensate.
+Modern codecs such as AAC, Vorbis and especially Opus rely on increasingly sophisticated psychoacoustic models, adaptive transforms, temporal masking and dynamic bitrate allocation. Their artifacts are often highly non-stationary and context-dependent.
+As a consequence, restoration quality does not scale linearly with training time. **Even at very high epoch counts, localized artifacts (clicks, pops, transient instabilities) may remain** because the original codec decisions are not directly observable from the decoded waveform alone.
+
+In practice: 
+MP3 - easiest
+AAC - difficult
+Vorbis - very difficult
+Opus - extremely difficult
 
 ---
 
