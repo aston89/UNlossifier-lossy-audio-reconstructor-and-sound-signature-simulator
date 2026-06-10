@@ -519,7 +519,7 @@ In practice: MP3 (easiest) / AAC (difficult) / Vorbis (very difficult) / Opus (e
 
 ### Note about "codec lasagna" !
 
-Not all files are degraded equally, some audio sources are clean single-pass encodes (e.g. WAV → AAC once), others come from a far more chaotic ecosystem: repeated uploads, platform re-encodes, format conversions, streaming optimizations, and unknown intermediate processing steps.
+Not all files are degraded equally, some audio sources are clean single-pass encodes (e.g. WAV to AAC once), others come from a far more chaotic ecosystem: repeated uploads, platform re-encodes, format conversions, streaming optimizations, and unknown intermediate processing steps.
 We refer to this condition informally as **codec lasagna**, a stack of unknown lossy transformations applied over time.
 In practice, a “multiple times converted” file may behave less like a single compression artifact and more like an accumulation of heterogeneous distortions, including multiple psychoacoustic re-encodings, transient misalignment across generations, resampling and normalization artifacts, unknown limiter/encoder interactions.
 **What should you expect from restoration?**
