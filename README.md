@@ -543,5 +543,6 @@ In the latter case, residual artifacts (clicks, micro-glitches, spectral smearin
 * **Output stability tightened:** final waveform clipping range adjusted from wider dynamic range to a stricter [-1, 1] normalization for safer audio export.
 * **Cleaner separation of concerns:** LR and MS branches are now treated more symmetrically during both training and inference, reducing representational drift.
 
-
+### Update 10/06/2026 : fix
+* restored the audio output file at 32bit float instead of the default pcm16 to avoid dithering, noise shaping and eventual peak clipping.
 
