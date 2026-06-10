@@ -500,10 +500,13 @@ ffmpeg -version
 
 - **model_mp3_96k_32000_epoch393.safetensors** (Epoch 393 l_lr: 0.008856 l_ms: 0.005933 l_stft: 0.677289 l_consistency: 0.001343 TOTAL: 0.150919).
   Trained with 6 pairs of different music style and genre, it's specifically usefull to restore mp3 compressed at 96kbps 32khz.
+  
 - **model_mp3_128k_44100_epoch397.safetensors** (Epoch 397 l_lr: 0.003997 l_ms: 0.002769 l_stft: 0.015105 l_consistency: 0.004153 TOTAL: 0.011863).
   Trained with 6 pairs of different music style and genre using 08/06/26 version, it's specifically usefull to restore mp3 compressed at 128kbps 44.1khz.
+  
 - **model_aac_128k_44100_epoch998.safetensors** (Epoch 998 l_lr: 0.004069 l_ms: 0.002902 l_stft: 0.018460 l_consistency: 0.000108 TOTAL: 0.010717).
   Trained with 6 pairs of different music style and genre using 08/06/26 version, it's specifically usefull to restore aac compressed at 128kbps 44.1khz.
+  This model is optimal for youtube AAC encoded files, it may exhibit peaks overshoots or instability when applied to AAC files generated through different encoding pipelines or third-party online converters, a check for overshoot peaks using [DeltaWave](https://deltaw.org/) is recommended.
 
 
 tip: A model trained at 32 kHz sampling rate can be used to infer audio at 44.1 kHz, but it will not be able to reconstruct or meaningfully restore content above its training bandwidth limit (≈16 kHz effective Nyquist region). Higher-frequency components will remain absent or be implicitly hallucinated rather than recovered.
