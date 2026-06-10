@@ -524,9 +524,9 @@ We refer to this condition informally as **codec lasagna**, a stack of unknown l
 In practice, a “multiple times converted” file may behave less like a single compression artifact and more like an accumulation of heterogeneous distortions, including multiple psychoacoustic re-encodings, transient misalignment across generations, resampling and normalization artifacts, unknown limiter/encoder interactions.
 **What should you expect from restoration?**
 Depending on the depth of the “lasagna”, results may range from:
-* **Clean single-pass encodes** = “roasted potatoes”: structured, recoverable, predictable artifacts.
-* **Moderately processed sources** → “seasoned stew”: recoverable but with residual instability.
-* **Deep multiconversion chains** → “lentil purée”: dense, chaotic, partially irreducible structure.
+* **Clean single-pass encodes** - “roasted potatoes”: structured, recoverable, predictable artifacts.
+* **Moderately processed sources** - “seasoned stew”: recoverable but with residual instability.
+* **Deep multiconversion chains** - “lentil purée”: dense, chaotic, partially irreducible structure.
 In the latter case, residual artifacts (clicks, micro-glitches, spectral smearing) may not reflect model failure but rather the absence of a consistent underlying encoding process to invert.
 
 ---
