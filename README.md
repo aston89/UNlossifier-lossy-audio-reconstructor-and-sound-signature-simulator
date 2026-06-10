@@ -516,11 +516,19 @@ Not all lossy codecs are equally recoverable, **older codecs such as MP3 tend to
 Modern codecs such as AAC, Vorbis and especially Opus rely on increasingly sophisticated psychoacoustic models, adaptive transforms, temporal masking and dynamic bitrate allocation. Their artifacts are often highly non-stationary and context-dependent.
 As a consequence, restoration quality does not scale linearly with training time. **Even at very high epoch counts, localized artifacts (clicks, pops, transient instabilities) may remain** because the original codec decisions are not directly observable from the decoded waveform alone.
 
-In practice: 
-MP3 - easiest
-AAC - difficult
-Vorbis - very difficult
-Opus - extremely difficult
+In practice: MP3 (easiest) / AAC (difficult) / Vorbis (very difficult) / Opus (extremely difficult).
+
+### Note about "codec lasagna" !
+
+Not all files are degraded equally, some audio sources are clean single-pass encodes (e.g. WAV → AAC once), others come from a far more chaotic ecosystem: repeated uploads, platform re-encodes, format conversions, streaming optimizations, and unknown intermediate processing steps.
+We refer to this condition informally as **codec lasagna**, a stack of unknown lossy transformations applied over time.
+In practice, a “multiple times converted” file may behave less like a single compression artifact and more like an accumulation of heterogeneous distortions, including multiple psychoacoustic re-encodings, transient misalignment across generations, resampling and normalization artifacts, unknown limiter/encoder interactions.
+**What should you expect from restoration?**
+Depending on the depth of the “lasagna”, results may range from:
+* **Clean single-pass encodes** = “roasted potatoes”: structured, recoverable, predictable artifacts.
+* **Moderately processed sources** → “seasoned stew”: recoverable but with residual instability.
+* **Deep multiconversion chains** → “lentil purée”: dense, chaotic, partially irreducible structure.
+In the latter case, residual artifacts (clicks, micro-glitches, spectral smearing) may not reflect model failure but rather the absence of a consistent underlying encoding process to invert.
 
 ---
 
