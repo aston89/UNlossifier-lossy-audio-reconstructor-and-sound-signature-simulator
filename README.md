@@ -557,6 +557,20 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 * **Output stability tightened:** final waveform clipping range adjusted from wider dynamic range to a stricter [-1, 1] normalization for safer audio export.
 * **Cleaner separation of concerns:** LR and MS branches are now treated more symmetrically during both training and inference, reducing representational drift.
 
-### Update 10/06/2026 : fix
+### Update 10/06/2026 : improvements & bug fixes
+* Replaced `librosa.load` pipeline with a **FFmpeg-based raw float32 decoder**, eliminating librosa as primary audio loader during training/inference.
+* Introduced a **disk-based NumPy cache system (`.npy`)** for decoded audio instead of pure in-RAM caching, enabling persistence across runs.
+* Added **deterministic cache keys using SHA1 + file metadata (size, mtime, sr, codec, bitrate, tag)** to avoid stale or mismatched cached audio.
+* Split caching into **separate CACHE_DIR (numpy audio) and TEMP_DIR (ffmpeg compressed audio)**, improving pipeline clarity and isolation.
+* Added `prebuild_audio_cache()` step to **pre-decode all training audio upfront**, reducing runtime bottlenecks during dataset iteration.
+* `load_audio_cached()` now supports **automatic cache hit/miss logic with mmap loading (`np.load(..., mmap_mode="r")`)** for lower memory pressure.
+* Removed reliance on the previous global **in-memory `AUDIO_CACHE` as the main acceleration mechanism**, shifting optimization toward disk cache strategy.
+* Updated dataset handling so `pairs` are **normalized to string paths early**, avoiding Path object overhead in worker processes.
+* Improved FFmpeg commands with **quiet mode (`-hide_banner -loglevel error -nostdin`)** for cleaner and faster subprocess execution.
+* Audio decoding now ensures **strict stereo shape validation and correction of odd-length buffers**, making pipeline more robust to corrupted/edge outputs.
+* Cache keying in dataset flux logic updated to include a **dedicated `"flux"` tag namespace**, preventing collision with other cached representations.
+* Minor optimization in dataset: **flux computation explicitly casts to float32 early**, reducing implicit NumPy dtype churn.
+* Training pipeline now explicitly **builds full audio cache before DataLoader creation**, improving first-epoch stability and throughput.
+* Overall architecture shift from **runtime decoding-heavy pipeline → preprocessing + cached dataset-driven pipeline**, improving training speed consistency at the cost of disk usage.
 * restored the audio output file at 32bit float instead of the default pcm16 to avoid dithering, noise shaping and eventual peak clipping.
 
