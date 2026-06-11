@@ -499,15 +499,15 @@ ffmpeg -version
 ### Safetensor weights
 
 - **model_mp3_96k_32000_epoch393.safetensors** (Epoch 393 l_lr: 0.008856 l_ms: 0.005933 l_stft: 0.677289 l_consistency: 0.001343 TOTAL: 0.150919).
-    Trained with 6 pairs of different music style and genre using the old V1 version, it's specifically usefull to restore mp3 compressed at 96kbps 32khz.
+    Trained with 6 pairs of different music style and genre using the V1 version, it's specifically usefull to restore mp3 compressed at 96kbps 32khz.
       This model is optimal for mp3 encoded with libmp3lame (FFmpeg LAME encoder) at CBR.
   
 - **model_mp3_128k_44100_epoch397.safetensors** (Epoch 397 l_lr: 0.003997 l_ms: 0.002769 l_stft: 0.015105 l_consistency: 0.004153 TOTAL: 0.011863).
-    Trained with 6 pairs of different music style and genre using 08/06/26 version, it's specifically usefull to restore mp3 compressed at 128kbps 44.1khz.
+    Trained with 6 pairs of different music style and genre using v2 version, it's specifically usefull to restore mp3 compressed at 128kbps 44.1khz.
     This model is optimal for mp3 encoded with libmp3lame (FFmpeg LAME encoder) at CBR.
   
 - **model_aac_128k_44100_epoch998.safetensors** (Epoch 998 l_lr: 0.004069 l_ms: 0.002902 l_stft: 0.018460 l_consistency: 0.000108 TOTAL: 0.010717).
-      Trained with 6 pairs of different music style and genre using 08/06/26 version, it's specifically usefull to restore aac compressed at 128kbps 44.1khz.
+      Trained with 6 pairs of different music style and genre using v2 version, it's specifically usefull to restore aac compressed at 128kbps 44.1khz.
       This model is "casually" optimal for youtube AAC encoded files, very similar to ffmpeg default aac encoder.
       This model may exhibit peaks overshoots or instability when applied to AAC files generated through different encoding pipelines or third-party online converters, therefore if you are uncertain about the restored.wav, do a check for overshoot peaks using [DeltaWave](https://deltaw.org/), if peaks are present, model/coded-pipeline mismatch its the problem.
 
@@ -547,7 +547,7 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 
 ---
 
-### Update 08/06/2026 (old_v2) : Model refinement & training/inference redesign
+### Update v2 (08/06/2026): Model refinement & training/inference redesign
 * **Reworked STFT loss (major upgrade):** replaced the previous magnitude/log-loss stack with a psychoacoustic-aware formulation, adding frequency-weighted emphasis (higher sensitivity to low frequencies), spectral gradient loss, and `log1p` stabilization for improved dynamic range handling.
 * **Richer multi-resolution analysis:** expanded STFT scales and made the loss more perceptually balanced across resolutions (from ultra-low to high frequency bands).
 * **Dual-path STFT supervision:** added a second STFT loss branch computed on both LR output and MS-reconstructed LR signal, improving consistency between representations.
@@ -557,7 +557,7 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 * **Output stability tightened:** final waveform clipping range adjusted from wider dynamic range to a stricter [-1, 1] normalization for safer audio export.
 * **Cleaner separation of concerns:** LR and MS branches are now treated more symmetrically during both training and inference, reducing representational drift.
 
-### Update 11/06/2026 (latest): Improvements & bug fixes
+### Update v3 (11/06/2026 - latest): Improvements & bug fixes
 * Replaced `librosa.load` pipeline with a **FFmpeg-based raw float32 decoder**, eliminating librosa as primary audio loader during training/inference.
 * Introduced a **disk-based NumPy cache system (`.npy`)** for decoded audio instead of pure in-RAM caching, enabling persistence across runs.
 * Added **deterministic cache keys using SHA1 + file metadata (size, mtime, sr, codec, bitrate, tag)** to avoid stale or mismatched cached audio.
