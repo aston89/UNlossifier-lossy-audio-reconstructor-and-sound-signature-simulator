@@ -572,5 +572,6 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 * Minor optimization in dataset: **flux computation explicitly casts to float32 early**, reducing implicit NumPy dtype churn.
 * Training pipeline now explicitly **builds full audio cache before DataLoader creation**, improving first-epoch stability and throughput.
 * Overall architecture shift from **runtime decoding-heavy pipeline → preprocessing + cached dataset-driven pipeline**, improving training speed consistency at the cost of disk usage.
+* Added a cuda performance boost switch ""torch.set_float32_matmul_precision("high")"", if you have an rtx gpu like Ampere, Ada or Blackwell, remove the comment.
 * restored the audio output file at 32bit float instead of the default pcm16 to avoid dithering, noise shaping and eventual peak clipping.
 
