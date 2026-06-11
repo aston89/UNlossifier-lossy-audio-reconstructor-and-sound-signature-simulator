@@ -499,7 +499,7 @@ ffmpeg -version
 ### Safetensor weights
 
 - **model_mp3_96k_32000_epoch393.safetensors** (Epoch 393 l_lr: 0.008856 l_ms: 0.005933 l_stft: 0.677289 l_consistency: 0.001343 TOTAL: 0.150919).
-    Trained with 6 pairs of different music style and genre, it's specifically usefull to restore mp3 compressed at 96kbps 32khz.
+    Trained with 6 pairs of different music style and genre using the old V1 version, it's specifically usefull to restore mp3 compressed at 96kbps 32khz.
       This model is optimal for mp3 encoded with libmp3lame (FFmpeg LAME encoder) at CBR.
   
 - **model_mp3_128k_44100_epoch397.safetensors** (Epoch 397 l_lr: 0.003997 l_ms: 0.002769 l_stft: 0.015105 l_consistency: 0.004153 TOTAL: 0.011863).
