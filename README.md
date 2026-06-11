@@ -547,7 +547,7 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 
 ---
 
-### Update 08/06/2026 : Model refinement & training/inference redesign
+### Update 08/06/2026 (old_v2) : Model refinement & training/inference redesign
 * **Reworked STFT loss (major upgrade):** replaced the previous magnitude/log-loss stack with a psychoacoustic-aware formulation, adding frequency-weighted emphasis (higher sensitivity to low frequencies), spectral gradient loss, and `log1p` stabilization for improved dynamic range handling.
 * **Richer multi-resolution analysis:** expanded STFT scales and made the loss more perceptually balanced across resolutions (from ultra-low to high frequency bands).
 * **Dual-path STFT supervision:** added a second STFT loss branch computed on both LR output and MS-reconstructed LR signal, improving consistency between representations.
@@ -557,7 +557,7 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 * **Output stability tightened:** final waveform clipping range adjusted from wider dynamic range to a stricter [-1, 1] normalization for safer audio export.
 * **Cleaner separation of concerns:** LR and MS branches are now treated more symmetrically during both training and inference, reducing representational drift.
 
-### Update 11/06/2026 : Improvements & bug fixes
+### Update 11/06/2026 (latest): Improvements & bug fixes
 * Replaced `librosa.load` pipeline with a **FFmpeg-based raw float32 decoder**, eliminating librosa as primary audio loader during training/inference.
 * Introduced a **disk-based NumPy cache system (`.npy`)** for decoded audio instead of pure in-RAM caching, enabling persistence across runs.
 * Added **deterministic cache keys using SHA1 + file metadata (size, mtime, sr, codec, bitrate, tag)** to avoid stale or mismatched cached audio.
