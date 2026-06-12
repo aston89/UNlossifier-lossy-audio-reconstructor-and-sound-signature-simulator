@@ -583,4 +583,3 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 * Replaced the old consistency loss  with a stronger `consistency_loss()` that checks both directions: LR to MS // MS to LR
 * Renamed `stft_lr_loss()` to `stft_loss()` just for cleaner naming.
 * Training now uses the new orthogonal consistency constraint as the main structural regularizer (harder better faster stronger - *daft punk cit.*).
-* avg 10x times faster in training, total loss around 0.01 at only 100 epochs compared to v3 wich required like 1000 epochs to achieve similar result.
