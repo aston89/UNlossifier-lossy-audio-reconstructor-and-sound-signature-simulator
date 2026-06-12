@@ -513,7 +513,7 @@ ffmpeg -version
 
 - **model_mp3_64k_44100_epoch997.safetensors** (Epoch 997 l_lr: 0.005969 l_ms: 0.004224 l_stft: 0.021610 l_consistency: 0.000126 TOTAL: 0.014579)-
   Trained with 6 pairs of different music style and genre using v3 version, it's specifically usefull to restore mp3 compressed at 64kbps 44.1khz.
-  This model is optimal for mp3 encoded with libmp3lame (FFmpeg LAME encoder) at CBR.
+  This model is optimal for mp3 encoded files with libmp3lame (FFmpeg LAME encoder) at CBR but still far away from clean restoration (clicks, pops, noise artifacts and intersample peaks).
 
 
 tip: A model trained at 32 kHz sampling rate can be used to infer audio at 44.1 kHz, but it will not be able to reconstruct or meaningfully restore content above its training bandwidth limit (≈16 kHz effective Nyquist region). Higher-frequency components will remain absent or be implicitly hallucinated rather than recovered.
