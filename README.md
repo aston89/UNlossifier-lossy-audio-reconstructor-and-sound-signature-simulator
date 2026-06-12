@@ -585,7 +585,7 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 ### Update v3b (12/06/2026): consistency constraint update
 * Replaced the old consistency loss  with a stronger `consistency_loss()` that checks both directions: LR to MS // MS to LR
 * Renamed `stft_lr_loss()` to `stft_loss()` just for cleaner naming.
-* Training now uses the new orthogonal consistency constraint as the main structural regularizer (harder better faster stronger - *daft punk cit.*).
+* Training now uses a more strict orthogonal consistency constraint as the main structural regularizer (harder better faster stronger - *daft punk cit.*).
 
 ### Update v4 (12/06/2026): New Context-Aware inference
 * Inference turns into a **locally recurrent, context-aware continuous estimator** to reduces audible chunking artifacts in real audio pipelines.
