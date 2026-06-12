@@ -561,7 +561,7 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 * **Output stability tightened:** final waveform clipping range adjusted from wider dynamic range to a stricter [-1, 1] normalization for safer audio export.
 * **Cleaner separation of concerns:** LR and MS branches are now treated more symmetrically during both training and inference, reducing representational drift.
 
-### Update v3 (11/06/2026 - latest): Improvements & bug fixes
+### Update v3 (11/06/2026): Improvements & bug fixes
 * Replaced `librosa.load` pipeline with a **FFmpeg-based raw float32 decoder**, eliminating librosa as primary audio loader during training/inference.
 * Introduced a **disk-based NumPy cache system (`.npy`)** for decoded audio instead of pure in-RAM caching, enabling persistence across runs.
 * Added **deterministic cache keys using SHA1 + file metadata (size, mtime, sr, codec, bitrate, tag)** to avoid stale or mismatched cached audio.
@@ -579,3 +579,8 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 * Added a cuda performance boost switch ""torch.set_float32_matmul_precision("high")"", if you have an rtx gpu like Ampere, Ada or Blackwell, remove the comment.
 * restored the audio output file at 32bit float instead of the default pcm16 to avoid dithering, noise shaping and eventual peak clipping.
 
+### Update v3b (12/06/2026): consistency constraint update
+* Replaced the old consistency loss  with a stronger `consistency_loss()` that checks both directions: LR to MS // MS to LR
+* Renamed `stft_lr_loss()` to `stft_loss()` just for cleaner naming.
+* Training now uses the new orthogonal consistency constraint as the main structural regularizer (harder better faster stronger - *daft punk cit.*).
+* avg 10x times faster in training, total loss around 0.01 at only 100 epochs compared to v3 wich required like 1000 epochs to achieve similar result.
