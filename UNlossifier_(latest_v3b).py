@@ -13,7 +13,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import safetensors.torch as sf_torch
 
-torch.set_float32_matmul_precision("high")
+# enable this free performance boost if you have an rtx Ampere/Ada/Blackwell gpu.
+# torch.set_float32_matmul_precision("high")
 
 # =========================================================
 # CONFIG
