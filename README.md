@@ -512,7 +512,7 @@ ffmpeg -version
   This model may exhibit peaks overshoots or instability when applied to AAC files generated through different encoding pipelines or third-party online converters, therefore if you are uncertain about the restored.wav, do a check for overshoot peaks using [DeltaWave](https://deltaw.org/), if peaks are present, model/coded-pipeline mismatch its the problem.
 
 - **model_mp3_64k_44100_epoch997.safetensors** (Epoch 997 l_lr: 0.005969 l_ms: 0.004224 l_stft: 0.021610 l_consistency: 0.000126 TOTAL: 0.014579)-
-  Trained with 6 pairs of different music style and genre using latest version, it's specifically usefull to restore mp3 compressed at 64kbps 44.1khz.
+  Trained with 6 pairs of different music style and genre using v3 version, it's specifically usefull to restore mp3 compressed at 64kbps 44.1khz.
   This model is optimal for mp3 encoded with libmp3lame (FFmpeg LAME encoder) at CBR.
 
 
