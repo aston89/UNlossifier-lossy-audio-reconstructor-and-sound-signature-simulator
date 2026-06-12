@@ -586,3 +586,15 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 * Replaced the old consistency loss  with a stronger `consistency_loss()` that checks both directions: LR to MS // MS to LR
 * Renamed `stft_lr_loss()` to `stft_loss()` just for cleaner naming.
 * Training now uses the new orthogonal consistency constraint as the main structural regularizer (harder better faster stronger - *daft punk cit.*).
+
+### Update v4 (12/06/2026): New Context-Aware inference
+* It turns a *purely block-wise denoiser* into a **locally recurrent, context-aware estimator**, which is exactly what reduces audible chunking artifacts in real audio pipelines.
+* **lookback buffer (ctx)**: each chunk was processed in isolation, now introduces a small “history buffer” (`prev_tail`, ~0.5s) appended to each chunk wich significantly improves temporal continuity and reduces boundary discontinuities (clicks, micro-glitches, phase jumps).
+* **context-extended inference**: Old method see only `[t : t + chunk]`, now it sees `[prev_tail + chunk]` then discards the overlapping prediction region to reduce “edge hallucinations” caused by missing pre-context.
+* **Improved phase / transient stability**: *Old:* transient reconstruction is inconsistent across chunk boundaries. *New:* model gets stable short-term waveform continuity. **Effect:** cleaner attacks (drums, consonants), fewer “sparkling/crackling” artifacts.
+* **Explicit output cropping after inference**: direct output was used as-is, new model output is trimmed (`ctx:ctx+chunk`) before overlap-add to removes contamination from lookback region while preserving its informational benefit.
+* **Better overlap-add coherence**: overlap-add assumed independent chunk predictions, now overlap-add operates on context-stabilized predictions for smoother gain transitions and reducing “breathing” artifacts in dense audio.
+* **Reduced boundary discontinuities**: there was a noticeable seams between windows in difficult material, now continuity is enforced implicitly via shared context. More **analog** reconstruction feel, especially on vocals and sustained harmonics.
+* slightly higher latency + memory: minimal compute overhead, extra `ctx` samples per step + concatenation overhead, marginal slowdown but negligible in practice compared to quality gain.
+* **More robust real-world decoding behavior**: old versions are sensitive to codec artifacts accumulating at chunk edges. new context smooths codec-induced discontinuities (MP3/AAC/Opus artifacts) for better generalization across compressed inputs.
+
