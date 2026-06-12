@@ -588,7 +588,7 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 * Training now uses the new orthogonal consistency constraint as the main structural regularizer (harder better faster stronger - *daft punk cit.*).
 
 ### Update v4 (12/06/2026): New Context-Aware inference
-* It turns a *purely block-wise denoiser* into a **locally recurrent, context-aware estimator**, which is exactly what reduces audible chunking artifacts in real audio pipelines.
+* Inference turns into a **locally recurrent, context-aware continuous estimator** to reduces audible chunking artifacts in real audio pipelines.
 * **lookback buffer (ctx)**: each chunk was processed in isolation, now introduces a small “history buffer” (`prev_tail`, ~0.5s) appended to each chunk wich significantly improves temporal continuity and reduces boundary discontinuities (clicks, micro-glitches, phase jumps).
 * **context-extended inference**: Old method see only `[t : t + chunk]`, now it sees `[prev_tail + chunk]` then discards the overlapping prediction region to reduce “edge hallucinations” caused by missing pre-context.
 * **Improved phase / transient stability**: *Old:* transient reconstruction is inconsistent across chunk boundaries. *New:* model gets stable short-term waveform continuity. **Effect:** cleaner attacks (drums, consonants), fewer “sparkling/crackling” artifacts.
