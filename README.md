@@ -598,7 +598,4 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 * slightly higher latency + memory: minimal compute overhead, extra `ctx` samples per step + concatenation overhead, marginal slowdown but negligible in practice compared to quality gain.
 * **More robust real-world decoding behavior**: old versions are sensitive to codec artifacts accumulating at chunk edges. new context smooths codec-induced discontinuities (MP3/AAC/Opus artifacts) for better generalization across compressed inputs.
 
-### Update v5 (14/06/2026): Refined approach
-* coming soon.
-
 
