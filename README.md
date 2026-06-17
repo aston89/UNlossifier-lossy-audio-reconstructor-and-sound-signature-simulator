@@ -532,9 +532,9 @@ ffmpeg -version
 - This model is optimal for mp3 encoded with libmp3lame (FFmpeg LAME encoder) at CBR.
   
 - **model_mp3_128k_44100_epoch397.safetensors** (Trained using the **v2**).
-- Trained with a 6 pairs dataset of different music style and genre.
-- Trained to restore mp3 compressed files at 128kbps 44.1khz.
-- This model is optimal for mp3 encoded with libmp3lame (FFmpeg LAME encoder) at CBR.
+  - Trained with a 6 pairs dataset of different music style and genre.
+  - Trained to restore mp3 compressed files at 128kbps 44.1khz.
+  - This model is optimal for mp3 encoded with libmp3lame (FFmpeg LAME encoder) at CBR.
   
 - **model_aac_128k_44100_epoch998.safetensors** (Trained using the **v2**).
 
