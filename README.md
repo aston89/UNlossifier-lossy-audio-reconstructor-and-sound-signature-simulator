@@ -656,7 +656,7 @@ This release is not a simple refinement of v4. A large portion of the training a
 * **Training and inference now operate under the same contextual assumptions**, reducing train/inference mismatch.
 * **Simplified and optimized the loss pipeline** to focus on reconstruction coherence rather than raw waveform matching, `l_lr` and `l_ms` now are just informative, not calculated in final total loss.
 * **Consistency loss is now the primary restoration objective**, enforcing agreement between LR and Mid/Side representations (implied phase, jitter etc etc).
-* **The previous `l_stft` complex loss has been replaced** by `l_coherence` loss, a lightweight high-frequency temporal consistency loss specifically designed to target codec-induced artifacts.
+* **The previous `l_stft` complex loss has been replaced by `l_coherence` loss**, a lightweight high-frequency temporal consistency loss specifically designed to target codec-induced artifacts.
 * **Improved overall training stability** during very long runs.
 * **Reduced preprocessing bottlenecks** on large datasets.
 * **safe recovery behavior after interruptions, crashes, or manual stops**: only lst epoch is stored in the save, not the batch state.
