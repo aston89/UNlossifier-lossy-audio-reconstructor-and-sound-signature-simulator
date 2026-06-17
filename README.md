@@ -75,7 +75,7 @@ Both modes share the same architecture and differ only in training data structur
 | 4 | Mid/Side Encoding |
 | 5 | U-Net Reconstruction |
 | 6 | Multi-domain Loss Optimization |
-| 7 | Restored Audio (LR reconstructed from MS) |
+| 7 | Restored Audio (LR reconstructed from a blend of LR/MS) |
 
 ### Core Components
 
@@ -361,6 +361,7 @@ To train a model, provide a folder containing clean `.wav` files:
 - --batch      Batch size (affects ram/vram) 
 - --codec      Compression codec (mp3, aac, opus, vorbis) - (use "wav" for creative signature style model training)
 - --bitrate    Target bitrate (e.g. 64k, 96k, 128k) - (skip this for creative signature style model training)
+- --saveonce   Specify how often you want the epoch to be saved on disk as safetensor
 
 During training:
 - Clean audio is automatically compressed using ffmpeg
@@ -374,10 +375,14 @@ To restore an audio file using a trained model:
 *be sure that your file output sample rate matches the trained model sample rate.
 
 #### Arguments
---input      Input audio file  
---output     Output restored file  
---model      Path to trained model (.safetensors)  
---sr         Sample rate  
+- --input      Input audio file  
+- --output     Output restored file  
+- --model      Path to trained model (.safetensors)  
+- --sr         Sample rate  
+
+### Pause / Resume / Stop
+- press P to pause and resume the training.
+- press CTRL+C to stop and save the model state to be resumer later.
 
 ### Processing Details
 - Audio is processed in overlapping chunks
