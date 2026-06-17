@@ -23,7 +23,7 @@
 * [10. Limitations](#10-limitations)
 * [11. Potential](#11-potential)
 * [12. Installation](#12-installation)
-* [13. Udase Notes][#13-usage-notes
+* [13. Usage Notes](#13-usage-notes)
 * [Safetensor Weights](#safetensor-weights)
 * [Notes](#notes)
 * [Updates v2](#updates)
