@@ -24,7 +24,7 @@
 * [11. Potential](#11-potential)
 * [12. Installation](#12-installation)
 * [Safetensor Weights](#safetensor-weights)
-* [Note about Codec Restoration Difficulty](#note-about-codec-restoration-difficulty)
+* [Notes](#notes)
 * [Update v2 (08/06/2026): Model Refinement & Training/Inference Redesign](#update-v2-08062026-model-refinement--traininginference-redesign)
 
 ---
@@ -516,7 +516,7 @@ ffmpeg -version
 
 ---
 
-### Notes
+## 13. Usage notes
 - GPU is strongly recommended for training
 - CPU inference is possible but slower
 - Disk space is required for temporary compressed files
@@ -551,6 +551,7 @@ ffmpeg -version
 This has a direct impact on flux-based sampling strategies: instead of prioritizing genuinely informative musical events, flux begins to assign high probability to codec-generated structure in these low-energy regions. The model therefore does not simply learn to denoise audio, but implicitly learns to interpret compression artifacts as meaningful signal components. In practice, this creates a distribution shift where “silent” regions at 64 kbps are treated as informative training targets, leading the network to reproduce or hallucinate texture in situations where no true musical content exists.
 
 ---
+## Notes
 
 ### Note about codec restoration difficulty !
 Not all lossy codecs are equally recoverable, **older codecs such as MP3 tend to introduce relatively predictable and stationary artifacts**, making them easier for neural models to learn and compensate.
