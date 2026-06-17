@@ -526,14 +526,12 @@ This has a direct impact on flux-based sampling strategies: instead of prioritiz
 ---
 
 ### Note about codec restoration difficulty !
-
 Not all lossy codecs are equally recoverable, **older codecs such as MP3 tend to introduce relatively predictable and stationary artifacts**, making them easier for neural models to learn and compensate.
 Modern codecs such as AAC, Vorbis and especially Opus rely on increasingly sophisticated psychoacoustic models, adaptive transforms, temporal masking and dynamic bitrate allocation. Their artifacts are often highly non-stationary and context-dependent.
 As a consequence, restoration quality does not scale linearly with training time. **Even at very high epoch counts, localized artifacts (clicks, pops, transient instabilities) may remain** because the original codec decisions are not directly observable from the decoded waveform alone.
 In practice: MP3 (easiest) / AAC (difficult) / Vorbis (very difficult) / Opus (extremely difficult).
 
 ### Note about "codec lasagna" !
-
 Not all files are degraded equally, some audio sources are clean single-pass encodes (e.g. WAV to AAC once), others come from a far more chaotic ecosystem: repeated uploads, platform re-encodes, format conversions, streaming optimizations, and unknown intermediate processing steps.
 We refer to this condition informally as **codec lasagna**, a stack of unknown lossy transformations applied over time.
 In practice, a “multiple times converted” file may behave less like a single compression artifact and more like an accumulation of heterogeneous distortions, including multiple psychoacoustic re-encodings, transient misalignment across generations, resampling and normalization artifacts, unknown limiter/encoder interactions.
@@ -545,7 +543,6 @@ Depending on the depth of the “lasagna”, results may range from:
 In the latter case, residual artifacts (clicks, micro-glitches, spectral smearing) may not reflect model failure but rather the absence of a consistent underlying encoding process to invert.
 
 ### Note about Vorbis and Opus codecs !
-
 When working with Vorbis and Opus, it’s important to drop the intuition that bitrate is a stable or even fully meaningful parameter. Both codecs behave more like adaptive systems than fixed-rate encoders, and what you see in tools (MediaInfo) or filenames (JDownloader2) is usually a **derived or averaged value** rather than something strictly enforced during encoding.
 Opus, in particular, operates on a frame-by-frame basis, continuously reallocating its internal bitrate budget depending on the complexity of the signal at any given moment. A dense transient might temporarily “consume” far more bits, while a sustained or simple segment will drop dramatically, all while maintaining a long-term average that loosely matches the requested target. 
 **For Opus, the sampling rate is effectively fixed at 48 kHz by design. The codec internally operates on a 48 kHz time base regardless of the input material, and any incoming audio is implicitly resampled to match this domain before encoding**. As a result, specifying a different sampling rate at the CLI level does not change the fundamental working rate of the codec; it only affects the preprocessing and postprocessing stages of the pipeline. In practice, **this means that using --sr 48000 is not just recommended but functionally aligned with how Opus is intended to operate**, while other values introduce unnecessary resampling without changing codec behavior. **TL:DR If you use Opus, always set --sr 48000 for both training and inference. Only as a final post-processing step, use FFmpeg to resample to 44100 if needed**. This is the cleanest and most consistent pipeline.
@@ -563,6 +560,7 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 * **Overlap strategy improved:** inference switched from ~10% overlap to 50% overlap, significantly reducing boundary artifacts with Hann window overlap-add.
 * **Output stability tightened:** final waveform clipping range adjusted from wider dynamic range to a stricter [-1, 1] normalization for safer audio export.
 * **Cleaner separation of concerns:** LR and MS branches are now treated more symmetrically during both training and inference, reducing representational drift.
+
 
 ### Update v3 (11/06/2026): Improvements & bug fixes
 * Replaced `librosa.load` pipeline with a **FFmpeg-based raw float32 decoder**, eliminating librosa as primary audio loader during training/inference.
@@ -582,10 +580,12 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 * Added a cuda performance boost switch ""torch.set_float32_matmul_precision("high")"", if you have an rtx gpu like Ampere, Ada or Blackwell, remove the comment.
 * restored the audio output file at 32bit float instead of the default pcm16 to avoid dithering, noise shaping and eventual peak clipping.
 
+
 ### Update v3b (12/06/2026): consistency constraint update
 * Replaced the old consistency loss  with a stronger `consistency_loss()` that checks both directions: LR to MS // MS to LR
 * Renamed `stft_lr_loss()` to `stft_loss()` just for cleaner naming.
 * Training now uses a more strict orthogonal consistency constraint as the main structural regularizer (harder better faster stronger - *daft punk cit.*).
+
 
 ### Update v4 (12/06/2026): New Context-Aware inference
 * Inference turns into a **locally recurrent, context-aware continuous estimator** to reduces audible chunking artifacts in real audio pipelines.
@@ -599,3 +599,29 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 * **More robust real-world decoding behavior**: old versions are sensitive to codec artifacts accumulating at chunk edges. new context smooths codec-induced discontinuities (MP3/AAC/Opus artifacts) for better generalization across compressed inputs.
 
 
+### Update v5 (16/06/2026): Major Architecture Update
+This release is not a simple refinement of v4. A large portion of the training and inference pipeline has been redesigned to improve stability, dataset coverage, long-session training reliability and restoration consistency.
+* **Added full training resume support**: including model state, optimizer state, RNG states, and automatic configuration validation.
+* **Added pause/resume/stop controls** during training without interrupting the current process: press P to pause and resume, press CTRL+C to stop and save state).
+* **Introduced persistent flux caching**: eliminating repeated spectral analysis across training sessions and significantly reducing startup overhead on large datasets.
+* **Reworked audio caching with in-memory acceleration**: reducing unnecessary disk reads during training.
+* **Added configurable checkpoint intervals through**: `--saveonce`, allowing long training runs without generating excessive checkpoint files.
+* **Enabled high precision matrix multiplication mode for supported GPUs** providing a free performance boost on modern hardware.
+* **Replaced the previous random file selection strategy with deterministic dataset traversal** ensuring every source file is seen consistently during training (alfanumerical sorted, 1 batch = 10 full pass on entire dataset pairs, e.g. 10 pairs equals to 100 pass for every batch, if batch = 1 then every epoch is entire dataset x 10).
+* **Improved dataset sampling reliability** by separating flux generation, caching, and segment selection into dedicated stages.
+* **Added symmetric context training**: each training chunk now includes both left and right temporal context instead of relying solely on past information (ctx).
+* **Introduced context cropping during optimization** forcing the network to learn using surrounding information while evaluating only the valid center region (loss = chunk witouth ctx).
+* **Added configurable context scaling** through an internal context ratio system.
+* **Reworked inference to match the new training architecture**, ctx lenght is aligned boht in training and inference.
+* **Replaced the previous carry-buffer approach** with true bidirectional context windows.
+* **Improved overlap-add reconstruction consistency**, reducing boundary artifacts between processed chunks.
+* **Added edge-aware padding during inference**, improving behavior at the beginning and end of files.
+* **Training and inference now operate under the same contextual assumptions**, reducing train/inference mismatch.
+* **Simplified and optimized the loss pipeline** to focus on reconstruction coherence rather than raw waveform matching, `l_lr` and `l_ms` now are just informative, not calculated in final total loss.
+* **Consistency loss is now the primary restoration objective**, enforcing agreement between LR and Mid/Side representations (implied phase, jitter etc etc).
+* **The previous `l_stft` complex loss has been replaced** by `l_coherence` loss, a lightweight high-frequency temporal consistency loss specifically designed to target codec-induced artifacts.
+* **Improved overall training stability** during very long runs.
+* **Reduced preprocessing bottlenecks** on large datasets.
+* **safe recovery behavior after interruptions, crashes, or manual stops**: only lst epoch is stored in the save, not the batch state.
+* **Improved temporal coherence across chunk boundaries**.
+* **Reduced architectural complexity** while increasing effective training focus on codec artifact removal.
