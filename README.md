@@ -25,7 +25,7 @@
 * [12. Installation](#12-installation)
 * [Safetensor Weights](#safetensor-weights)
 * [Notes](#notes)
-* [Update v2 (08/06/2026): Model Refinement & Training/Inference Redesign](#update-v2-08062026-model-refinement--traininginference-redesign)
+* [Updates v2](#updates)
 
 ---
 
@@ -578,6 +578,8 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 **In conclusion : In both Vorbis and Opus, when using --bitrate 128k, you are only setting a target average bitrate. The encoder will dynamically allocate bits per frame based on audio complexity, so the actual instantaneous bitrate will vary, even if the long-term average stays around 128k.**
 
 ---
+
+## Updates
 
 ### Update v2 (08/06/2026): Model refinement & training/inference redesign
 * **Reworked STFT loss (major upgrade):** replaced the previous magnitude/log-loss stack with a psychoacoustic-aware formulation, adding frequency-weighted emphasis (higher sensitivity to low frequencies), spectral gradient loss, and `log1p` stabilization for improved dynamic range handling.
