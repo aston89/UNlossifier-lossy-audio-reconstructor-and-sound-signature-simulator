@@ -537,15 +537,15 @@ ffmpeg -version
 - This model is optimal for mp3 encoded with libmp3lame (FFmpeg LAME encoder) at CBR.
   
 - **model_aac_128k_44100_epoch998.safetensors** (Trained using the **v2**).
-- Trained with a 6 pairs dataset of different music style and genre.
-- trained to restore aac compressed files at 128kbps 44.1khz.
-- This model is optimal for AAC encoded files from youtube (very similar to ffmpeg default aac encoder).
+
+  - Trained with a 6 pairs dataset of different music style and genre.
+  - trained to restore aac compressed files at 128kbps 44.1khz.
+  - This model is optimal for AAC encoded files from youtube (very similar to ffmpeg default aac encoder).
   
 - **model_mp3_128k_44100_epoch500.safetensors** (Trained using the **V5**).
 - Trained with a special noise audio dataset crafted for the new consistency and coherence losses.
 - Trained to restore mp3 compressed files at 128kbps 44.1khz.
 - The dataset used in this training consist on 6x3 basic noise audio tracks (white, pink, blue, brown, violet, grey) with a slight stereo decorrelation, each file lenght is 1min at 32bit float bit depth, first 6 are standard, next 6 have L channel with phase inverted, next 6 have R channel with phase inverted for a total of 18 tracks, this was made to cover most case scenarios witouth the need of a huge dataset of music.
-- You can find the 
 
 - **model_mp3_64k_44100_epoch997.safetensors** (Epoch 997 l_lr: 0.005969 l_ms: 0.004224 l_stft: 0.021610 l_consistency: 0.000126 TOTAL: 0.014579)-
   Trained with 6 pairs of different music style and genre using v3 version, it's specifically usefull to restore mp3 compressed at 64kbps 44.1khz.
