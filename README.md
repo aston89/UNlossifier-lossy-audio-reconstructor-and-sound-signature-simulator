@@ -25,7 +25,7 @@
 * [13. Usage Notes](#13-usage-notes)
 * [Safetensor Weights](#safetensor-weights)
 * [Notes](#notes)
-* [Updates v2](#updates)
+* [Updates](#updates)
 
 ---
 
