@@ -7,6 +7,28 @@
 
 ---
 
+## Table of Contents
+
+* [1. Overview](#1-overview)
+* [2. Key Features](#2-key-features)
+* [3. How It Works](#3-how-it-works)
+  
+  * [3b. Experimental Sound Signature Simulation: Limitations](#3b-experimental-sound-signature-simulation-limitations)
+* [4. Audio Restoration Philosophy](#4-audio-restoration-philosophy)
+* [5. Model Architecture](#5-model-architecture)
+* [6. Training](#6-training)
+* [7. Custom Training (Core Feature)](#7-custom-training-core-feature)
+* [8. Usage](#8-usage)
+* [9. Examples / Demos](#9-examples--demos)
+* [10. Limitations](#10-limitations)
+* [11. Potential](#11-potential)
+* [12. Installation](#12-installation)
+* [Safetensor Weights](#safetensor-weights)
+* [Note about Codec Restoration Difficulty](#note-about-codec-restoration-difficulty)
+* [Update v2 (08/06/2026): Model Refinement & Training/Inference Redesign](#update-v2-08062026-model-refinement--traininginference-redesign)
+
+---
+
 ## 1. Overview
 UNlossifier is an AI-driven audio restoration tool designed primarily to reconstruct high-quality sound from heavily compressed lossy files.
 Unlike traditional denoisers or enhancers, UNlossifier focuses on reversing codec-induced degradation. It not only reduces compression artifacts (e.g. smearing, ringing, bandwidth loss) but also attempts to reconstruct missing spectral content that was discarded during encoding.
