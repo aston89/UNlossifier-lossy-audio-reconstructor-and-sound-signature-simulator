@@ -23,9 +23,9 @@
 * [11. Potential](#11-potential)
 * [12. Installation](#12-installation)
 * [13. Usage Notes](#13-usage-notes)
-* [Safetensor Weights](#safetensor-weights)
-* [Notes](#notes)
-* [Updates](#updates)
+* [14. Safetensor Weights](#14-safetensor-weights)
+* [15. Notes](#15-notes)
+* [16. Updates](#16-updates)
 
 ---
 
@@ -523,7 +523,7 @@ ffmpeg -version
 
 ---
 
-### Safetensor weights
+### 14. Safetensor weights
 
 - **model_mp3_64k_44100_epoch997.safetensors** (Trained using the **v3**).
   - Stats: Epoch 997 l_lr: 0.005969 l_ms: 0.004224 l_stft: 0.021610 l_consistency: 0.000126 TOTAL: 0.014579 (published for reference only).
@@ -563,7 +563,7 @@ This has a direct impact on flux-based sampling strategies: instead of prioritiz
 
 ---
 
-## Notes
+## 15. Notes
 
 ### Note about codec restoration difficulty !
 Not all lossy codecs are equally recoverable, **older codecs such as MP3 tend to introduce relatively predictable and stationary artifacts**, making them easier for neural models to learn and compensate.
@@ -591,7 +591,7 @@ Opus, in particular, operates on a frame-by-frame basis, continuously reallocati
 
 ---
 
-## Updates
+## 16. Updates
 
 ### Update v2 (08/06/2026): Model refinement & training/inference redesign
 * **Reworked STFT loss (major upgrade):** replaced the previous magnitude/log-loss stack with a psychoacoustic-aware formulation, adding frequency-weighted emphasis (higher sensitivity to low frequencies), spectral gradient loss, and `log1p` stabilization for improved dynamic range handling.
