@@ -529,7 +529,7 @@ ffmpeg -version
   - Trained with 6 pairs of different music style and genre using v3 version, it's specifically usefull to restore mp3 compressed at 64kbps 44.1khz.
   - Trained to restore **mp3** files encoded at 64kbps 44.1khz.
   - This model is best suited for **mp3** encoded with libmp3lame (FFmpeg LAME encoder) at CBR.
-  - Note: this is still far away from a clean restoration, clicks, pops, noise artifacts, intersample peaks, missing frequencies... (read tip below for more info).
+  - Note: This is still far away from a clean restoration, clicks, pops, noise artifacts, intersample peaks, missing frequencies... (read tip below for more info).
 
 - **model_mp3_96k_32000_epoch393.safetensors** (Trained using the **v1**).
   - Trained with a 6 pairs dataset of different music style and genre.
