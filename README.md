@@ -525,7 +525,8 @@ ffmpeg -version
 
 ### Safetensor weights
 
-- **model_mp3_64k_44100_epoch997.safetensors** (Epoch 997 l_lr: 0.005969 l_ms: 0.004224 l_stft: 0.021610 l_consistency: 0.000126 TOTAL: 0.014579).
+- **model_mp3_64k_44100_epoch997.safetensors** (Trained using the **v3**).
+  - Stats: Epoch 997 l_lr: 0.005969 l_ms: 0.004224 l_stft: 0.021610 l_consistency: 0.000126 TOTAL: 0.014579 (published for reference only).
   - Trained with 6 pairs of different music style and genre using v3 version, it's specifically usefull to restore mp3 compressed at 64kbps 44.1khz.
   - Trained to restore **mp3** files encoded at 64kbps 44.1khz.
   - This model is best suited for **mp3** encoded with libmp3lame (FFmpeg LAME encoder) at CBR.
