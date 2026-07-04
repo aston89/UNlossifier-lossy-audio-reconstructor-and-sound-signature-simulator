@@ -552,6 +552,7 @@ ffmpeg -version
   - Trained to restore **mp3** files encoded at 128kbps 44.1khz.
   - This model is best suited for **mp3** encoded with libmp3lame (FFmpeg LAME encoder) at CBR.
   - The **special dataset** used in this training is present on this repo inside "Noise_dataset" folder, it consist on 3x **6 basic noise audio tracks** (white, pink, blue, brown, violet, grey) with a slight stereo decorrelation, each file lenght is 1min, stereo, 44.1khz and 32bit float bit depth. The first 1-6 are standard, the 7-12 have L channel with phase inverted and the 13-18 have R channel with phase inverted. This was made to cover most case scenarios witouth the need of a huge dataset of music but theorically, if you want fast model training you could simply use the first 6, the tool will pass all those 6 files x10 for a total of 60 passes each epoch at "--batch 1".
+  - Note: The training of this model was temporarily stopped due to summer heat, it will be resumed for further and deeper training due to the **promising results** of the refined V5 release and noise dataset training approach.
 
 
 **Info:** A model trained at 32 kHz sampling rate can be used to infer audio at 44.1 kHz, but it will not be able to reconstruct or meaningfully restore content above its training bandwidth limit (≈16 kHz effective Nyquist region). Higher-frequency components will remain absent or be implicitly hallucinated rather than recovered.
