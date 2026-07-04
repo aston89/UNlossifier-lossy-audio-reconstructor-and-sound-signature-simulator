@@ -548,7 +548,6 @@ ffmpeg -version
   - This model is for **aac** encoded files from youtube (very similar to ffmpeg default aac encoder).
   
 - **model_mp3_128k_44100_epoch500.safetensors** (Trained using the **V5** and **Noise Dataset**).
-  - Trained with a special noise audio dataset crafted for the new consistency and coherence losses.
   - Trained to restore **mp3** files encoded at 128kbps 44.1khz.
   - This model is best suited for **mp3** encoded with libmp3lame (FFmpeg LAME encoder) at CBR.
   - **Note:** The training was temporarily stopped at epoch 500 due to summer heat, it will be resumed for further and deeper training due to the **promising results** of the refined V5 release and noise dataset training approach.
